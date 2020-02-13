@@ -44,6 +44,8 @@ int _bf(struct AVLnode* current)
 {
     return _h(current->right) - _h(current->left);
 }
+
+//worksheet 31 question
 struct AVLnode* _rotateLeft(struct AVLnode* current) {
     struct AVLnode* newTop = current->right;
     current->right = newTop->left;
@@ -52,6 +54,8 @@ struct AVLnode* _rotateLeft(struct AVLnode* current) {
     _setHeight(newTop);
     return newTop;
 }
+
+//worksheet 31 question
 struct AVLnode* _rotateRight(struct AVLnode* current) {
     struct AVLnode* newTop = current->left;
     current->left = newTop->right;
@@ -60,7 +64,11 @@ struct AVLnode* _rotateRight(struct AVLnode* current) {
     _setHeight(newTop);
     return newTop;
 }
+
+//provided by worksheet 31
 struct AVLnode* _balance(struct AVLnode* current) {
+    
+    printf("Trying to balance %d\n", current->value);
     int cbf = _bf(current);
     if (cbf < -1) {
         if (_bf(current->left) > 0) // double rotation
@@ -106,6 +114,47 @@ struct AVLnode* _removeLeftmost(struct AVLnode* cur) {
     free(cur);
     return temp;
 }
+
+//provided by worksheet 31
+TYPE _leftMost(struct AVLnode* cur) {
+    while (cur->left != 0) {
+        cur = cur->left;
+    }
+    return cur->value;
+}
+
+//referenced worksheet 29
+//containsAVL tree will check to make sure this is not an empty tree
+//after addition or removal of nodes, program needs to traverse up
+// to the root node while balancing
+struct AVLnode* _removeNode(struct AVLnode* current, TYPE val) {
+
+    struct AVLnode * temp;
+    
+    if (current->value == val) { //base case, value found
+        if (current->right == NULL) { //no right child so free current node, and return left child
+            temp = current->left;
+            free(current);
+            return temp;
+        }
+        else { //has right child
+            current->value = _leftMost(current->right);
+            current->right = _removeLeftmost(current->right);
+        }
+    }
+    else if (val < current->value) {
+        current->left  = _removeNode(current->left,val);
+    }
+    else {
+        current->right  = _removeNode(current->right,val);
+    }
+    
+    printf("traversing up parent node, current->value: %d\n",current->value);
+    return _balance(current);
+}
+
+
+//provided by AVL walk through lecture
 int containsAVLTree(struct AVLTree* tree, TYPE val) {
     struct AVLnode* cur;
     cur = tree->root;
@@ -117,40 +166,22 @@ int containsAVLTree(struct AVLTree* tree, TYPE val) {
     }
     return 0;
 }
-struct AVLnode* _removeNode(struct AVLnode* cur, TYPE val) {
-    struct AVLnode* current;
-    current = cur;
-    while (current != 0)
-    {
-        if (current->value == val) {
-            if (current->right == NULL) {
-                return current->left;
-            }
-            else {
-                current->value = _leftMost(current->right);
-                current->right = _removeLeftmost(current->right);
-            }
-        }
-        else if (val < current->value) {
-            current = current->left;
-        }
-        else {
-            current = current->right;
-        }
-    }
-}
+
+//provided by worksheet 31
 void removeAVLTree(struct AVLTree* tree, TYPE val) {
     if (containsAVLTree(tree, val)) {
         tree->root = _removeNode(tree->root, val);
         tree->cnt--;
     }
 }
-TYPE _leftMost(struct AVLnode* cur) {
-    while (cur->left != 0) {
-        cur = cur->left;
-    }
-    return cur->value;
+
+void addAVLTree(struct AVLTree* tree, TYPE val) {
+    tree->root = _AVLnodeAdd(tree->root, val); /* call the recursive helper function */
+    tree->cnt++;
 }
+
+
+
 void print2DUtil(struct AVLnode* root, int space)
 {
     // Base case 
@@ -176,41 +207,45 @@ void print2D(struct AVLnode* root)
     print2DUtil(root, 0);
 }
 
-void addAVLTree(struct AVLTree* tree, TYPE val) {
-    tree->root = _AVLnodeAdd(tree->root, val); /* call the recursive helper function */
-    tree->cnt++;
-}
 
 int main(int argc, char* argv[])
 {
     struct AVLTree* tree = newAVLTree();
     /*Create value of the type of data that you want to store*/
 
-    printf("tree created\n");
+    printf("Tree created with keys:\n75,70,100,60,80,105,77,120\n");
 
-    addAVLTree(tree, 1);
-    addAVLTree(tree, 2);
-    addAVLTree(tree, 3);
-    // print2D(tree->root);
-    // printTree(tree, printVal);
-    printf("\n");
-    addAVLTree(tree, 4);
-    addAVLTree(tree, 5);
+    addAVLTree(tree, 75);
+    addAVLTree(tree, 70);
+    addAVLTree(tree, 100);
+    addAVLTree(tree, 60);
+    addAVLTree(tree, 80);
+    addAVLTree(tree, 105);
+    addAVLTree(tree, 77);
+    addAVLTree(tree, 120);
     print2D(tree->root);
-    printf("tree->root->value %d", tree->root->value);
-    //printf("\n");
-    // _AVLnodeAdd(tree->root, &myData5.value);
-    // print2D(tree->root);
-    printf("\n");
-    // _AVLnodeAdd(tree->root, &myData6.value);
-    // _AVLnodeAdd(tree->root, &myData7.value);
-    // _AVLnodeAdd(tree->root, &myData8.value);
-    // print2D(tree->root);
-    // printf("\n");
-    // removeAVLTree(tree->root, &myData8.value);
-    // removeAVLTree(tree->root, &myData4.value);
-  //
-    // print2D(tree->root);
-    //printf("\n");
+    printf("Current root: %d\n", tree->root->value);
+    printf("=======================\n\n");
+    
+
+    printf("Removing key: 60\n");
+    removeAVLTree(tree, 60);
+    print2D(tree->root);
+    printf("Current root: %d\n", tree->root->value);
+    printf("=======================\n\n");
+    
+    printf("Adding key: 60\n");
+    addAVLTree(tree, 60);
+    print2D(tree->root);
+    printf("Current root: %d\n", tree->root->value);
+    printf("=======================\n\n");
+    
+    printf("Removing keys: 120, 60\n");
+    removeAVLTree(tree, 120);
+    removeAVLTree(tree, 60);
+    print2D(tree->root);
+    printf("Current root: %d\n", tree->root->value);
+    printf("=======================\n\n");
+
     return 1;
 }
