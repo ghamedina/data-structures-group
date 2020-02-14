@@ -220,19 +220,24 @@ int main(int argc, char* argv[])
 
     printf("Tree created with keys:\n75,70,100,60,80,105,77,120\n");
 
-    addAVLTree(tree, 75);
-    addAVLTree(tree, 70);
-    addAVLTree(tree, 100);
-    addAVLTree(tree, 60);
-    addAVLTree(tree, 80);
-    addAVLTree(tree, 105);
-    addAVLTree(tree, 77);
-    addAVLTree(tree, 120);
+    addAVLTree(tree, 1);
+    print2D(tree->root);
+    addAVLTree(tree, 2);
+    print2D(tree->root);
+    addAVLTree(tree, 3);
+    print2D(tree->root);
+    addAVLTree(tree, 4);
+    print2D(tree->root);
+    addAVLTree(tree, 5);
+    print2D(tree->root);
+    addAVLTree(tree, 6);
+    print2D(tree->root);
+    addAVLTree(tree, 7);
     print2D(tree->root);
     printf("Current root: %d\n", tree->root->value);
     printf("=======================\n\n");
     
-
+    /*
     printf("Removing key: 60\n");
     removeAVLTree(tree, 60);
     print2D(tree->root);
@@ -251,6 +256,7 @@ int main(int argc, char* argv[])
     print2D(tree->root);
     printf("Current root: %d\n", tree->root->value);
     printf("=======================\n\n");
+    */
     freeTree(tree->root);
     free(tree);
     return 1;
