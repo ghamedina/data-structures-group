@@ -68,7 +68,7 @@ struct AVLnode* _rotateRight(struct AVLnode* current) {
 //provided by worksheet 31
 struct AVLnode* _balance(struct AVLnode* current) {
     
-    printf("Trying to balance %d\n", current->value);
+    //printf("Trying to balance %d\n", current->value);
     int cbf = _bf(current);
     if (cbf < -1) {
         if (_bf(current->left) > 0) // double rotation
@@ -220,20 +220,34 @@ int main(int argc, char* argv[])
 
     printf("Tree created with keys:\n75,70,100,60,80,105,77,120\n");
 
+    printf("Adding 1");
     addAVLTree(tree, 1);
     print2D(tree->root);
+
+    printf("Adding 2");
     addAVLTree(tree, 2);
     print2D(tree->root);
+
+    printf("Adding 3");
     addAVLTree(tree, 3);
     print2D(tree->root);
+
+    printf("Adding 4");
     addAVLTree(tree, 4);
     print2D(tree->root);
+
+    printf("Adding 5");
     addAVLTree(tree, 5);
     print2D(tree->root);
+
+    printf("Adding 6");
     addAVLTree(tree, 6);
     print2D(tree->root);
+
+    printf("Adding 7");
     addAVLTree(tree, 7);
     print2D(tree->root);
+
     printf("Current root: %d\n", tree->root->value);
     printf("=======================\n\n");
     
