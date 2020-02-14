@@ -246,6 +246,7 @@ int main(int argc, char* argv[])
     print2D(tree->root);
     printf("Current root: %d\n", tree->root->value);
     printf("=======================\n\n");
-
+    free(tree->root);
+    free(tree);
     return 1;
 }
