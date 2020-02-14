@@ -246,7 +246,11 @@ int main(int argc, char* argv[])
     print2D(tree->root);
     printf("Current root: %d\n", tree->root->value);
     printf("=======================\n\n");
-    free(tree->root);
-    free(tree);
+    removeAVLTree(tree, 80);
+    removeAVLTree(tree, 75);
+    removeAVLTree(tree, 100);
+    removeAVLTree(tree, 70);
+    removeAVLTree(tree, 77);
+    removeAVLTree(tree, 105);
     return 1;
 }
