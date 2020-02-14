@@ -206,8 +206,13 @@ void print2D(struct AVLnode* root)
     // Pass initial space count as 0 
     print2DUtil(root, 0);
 }
-
-
+void freeTree(struct AVLnode* current)
+{
+    if (current == NULL) return;
+    freeTree(current->left);
+    freeTree(current->right);
+    free(current);
+}
 int main(int argc, char* argv[])
 {
     struct AVLTree* tree = newAVLTree();
@@ -246,12 +251,7 @@ int main(int argc, char* argv[])
     print2D(tree->root);
     printf("Current root: %d\n", tree->root->value);
     printf("=======================\n\n");
-    removeAVLTree(tree, 80);
-    removeAVLTree(tree, 75);
-    removeAVLTree(tree, 100);
-    removeAVLTree(tree, 70);
-    removeAVLTree(tree, 77);
-    removeAVLTree(tree, 105);
+    freeTree(tree->root);
     free(tree);
     return 1;
 }
