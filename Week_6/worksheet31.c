@@ -252,5 +252,6 @@ int main(int argc, char* argv[])
     removeAVLTree(tree, 70);
     removeAVLTree(tree, 77);
     removeAVLTree(tree, 105);
+    free(tree);
     return 1;
 }
