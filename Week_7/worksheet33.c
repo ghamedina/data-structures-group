@@ -267,21 +267,35 @@ int main(int argc, const char * argv[]) {
 	struct DynArr heap;
 	initDynArr(&heap, 5);
 // 2, 3, 5, 9, 10, 7, 8, 12, 14, 11, 16
-	heapAdd(&heap, 2);
-	heapAdd(&heap, 3);
-	heapAdd(&heap, 5);
 	heapAdd(&heap, 9);
-	heapAdd(&heap, 10);
-	printArray(&heap);
+	heapAdd(&heap, 3);
+	heapAdd(&heap, 2);
+	heapAdd(&heap, 4);
+	heapAdd(&heap, 5);
 	heapAdd(&heap, 7);
 	heapAdd(&heap, 8);
-	heapAdd(&heap, 12);
-	heapAdd(&heap, 14);
-	heapAdd(&heap, 11);
-	heapAdd(&heap, 16);
-	heapRemoveFirst(&heap);
+	heapAdd(&heap, 6);
+	heapAdd(&heap, 1);
+	heapAdd(&heap, 0);
+    printf("Initial: \n\n");
+    printArray(&heap);
 
-	printArray(&heap);
+
+    printf("1:\n\n");
+	heapRemoveFirst(&heap);
+    printArray(&heap);
+
+    printf("2:\n\n");
+    heapRemoveFirst(&heap);
+    printArray(&heap);
+
+    printf("3:\n\n");
+    heapRemoveFirst(&heap);
+    printArray(&heap);
+
+    printf("4:\n\n");
+    heapRemoveFirst(&heap);
+    printArray(&heap);
 
 	freeDynArr(&heap);
     return 0;
