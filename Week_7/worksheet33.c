@@ -21,7 +21,7 @@ void initDynArr(struct DynArr *v, int capacity)
     
     v->size = 0;
     v->capacity = capacity;
-    printf("The current capacity is %i\n", v->capacity);
+    // printf("The current capacity is %i\n", v->capacity);
 }
 
 
@@ -39,31 +39,28 @@ void freeDynArr(struct DynArr *v)
 
 int dyArraySize( struct DynArr *v)
 {
+	printf("SIZE ----> %d\n\n", v->size);
     return v->size;
 }
 
 
 void _setCapacityDynArr(struct DynArr *v, int newCap)
 {
-    
-    //initializing new array
-    struct DynArr newDynArr;
-    initDynArr(&newDynArr, newCap);
-    
-    //moving old elements to new array
-    for(int i = 0; i<v->size; i++){
-        newDynArr.data[i] = (*v).data[i];
+    assert(v != 0);
+    /* Allocate new temporary dynamic array with given cap */
+    TYPE *temp = malloc(sizeof(TYPE) * newCap);
+    assert(temp != 0);
+    /* Copy elements from old array to new array */
+    for (int i = 0; i < v->size; i++) {
+    temp[i] = v->data[i];
     }
-
-    //update capacity
-    newDynArr.capacity = newCap;
-    
-    //releasing old DynArr
-    freeDynArr(v);
-    
-    //Point to new DynArr
-    *v = newDynArr;
-
+    /* Free the old array */
+    free(v->data);
+    /* Set pointer v to new array */
+    v->data = temp;
+    temp = 0;
+    /* Update the capacity*/
+    v->capacity=newCap;
 }
 
 
@@ -75,6 +72,7 @@ void dyArrayAdd(struct DynArr *v, TYPE val)
     
     v->data[v->size] = val;
     v->size++;
+	// printf("dyArrayAdd size: %d\n\n", v->size);
 }
 
 
@@ -232,7 +230,7 @@ void adjustHeap(struct DynArr * heap, int max, int pos) {
 void heapRemoveFirst(struct DynArr *heap) {
     int last = dyArraySize(heap)-1;
     assert(dyArraySize(heap) > 0);    /* make sure we have at least one element */
-
+	printf("heapRemoveFirst ----> last %d, heap->size %d\n\n", last, heap->size);
     /* Copy the last element to the first  position */
     dyArrayPut(heap, 0, dyArrayGet(heap, last));
     removeAtDynArr(heap, last);       /* Remove last element.*/
@@ -246,7 +244,8 @@ void heapAdd(struct DynArr * heap, TYPE newValue) {
 	dyArrayAdd(heap, newValue); /* adds to end – now need to adjust position */
 
 	while(pos != 0) {
-		parent = (pos - 1) / 2;
+		parent = (pos - 1)/2;
+		// printf("heapAdd, pos: %d, parent: %d \n\n", pos, parent);
 		if (dyArrayGet(heap, pos) < dyArrayGet(heap, parent)) {
 			swapDynArr(heap, parent, pos);
 			pos = parent;
@@ -256,13 +255,34 @@ void heapAdd(struct DynArr * heap, TYPE newValue) {
 	}
 }
 
+void printArray(struct DynArr * heap) {
+	for (int i = 0; i < heap->size; i++) {
+		printf("%d ", heap->data[i]);
+	}
+	printf("\n\n");
+	// printf("printArr, heap cap: %d, size: %d \n\n", heap->capacity, heap->size);
+}
 
 int main(int argc, const char * argv[]) {
 	struct DynArr heap;
 	initDynArr(&heap, 5);
 // 2, 3, 5, 9, 10, 7, 8, 12, 14, 11, 16
-	heapAdd(&heap, 1);
+	heapAdd(&heap, 2);
 	heapAdd(&heap, 3);
+	heapAdd(&heap, 5);
+	heapAdd(&heap, 9);
+	heapAdd(&heap, 10);
+	printArray(&heap);
+	heapAdd(&heap, 7);
+	heapAdd(&heap, 8);
+	heapAdd(&heap, 12);
+	heapAdd(&heap, 14);
+	heapAdd(&heap, 11);
+	heapAdd(&heap, 16);
+	heapRemoveFirst(&heap);
+
+	printArray(&heap);
+
+	freeDynArr(&heap);
     return 0;
-    
 }
