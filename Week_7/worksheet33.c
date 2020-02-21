@@ -204,16 +204,28 @@ TYPE heapGetFirst (struct DynArr *heap) {
 
 
 void adjustHeap(struct DynArr * heap, int max, int pos) {
-
-    /*fix me*/
-
-
-
-
-
-
-
-
+	int leftChild = 2 * pos + 1; 
+	int rightChild = 2 * pos + 2;
+	int smallestChild = indexSmallest(heap, leftChild, rightChild);
+	if (rightChild < max) { /* we have two children */
+		// if value at pos > value of smallest child
+		if (heap->data[pos] > heap->data[smallestChild]) {
+			// swap with smallest child,  call adjustHeap (max, index of smallest child)
+			swap(heap, pos, smallestChild);
+			adjustHeap(heap, dyArraySize(heap)-1, smallestChild);
+		}
+	}
+	// else if (leftchild < max) { /* we have one child */
+	else if (leftChild < max) {
+		// if value at pos > value of child
+		if (heap->data[pos] > heap->data[leftChild]) {
+			// swap with smallest child, call adjustHeap (max, index of left child)
+			swap(heap, pos, smallestChild);
+			adjustHeap(heap,dyArraySize(heap)-1, leftChild);
+		}
+	}
+   /* else no children, done */
+	return;
 }
 
 
@@ -229,22 +241,28 @@ void heapRemoveFirst(struct DynArr *heap) {
 
 
 void heapAdd(struct DynArr * heap, TYPE newValue) {
-    
-    dyArrayAdd(heap, newValue); /* adds to end – now need to adjust position */
+	int parent;
+	int pos = dyArraySize(heap);
+	dyArrayAdd(heap, newValue); /* adds to end – now need to adjust position */
 
-    /*fix me*/
-
-
-
-
-
-
+	while(pos != 0) {
+		parent = (pos - 1) / 2;
+		if (dyArrayGet(heap, pos) < dyArrayGet(heap, parent)) {
+			swapDynArr(heap, parent, pos);
+			pos = parent;
+		} else {
+			return;
+		}
+	}
 }
 
 
-
 int main(int argc, const char * argv[]) {
-
+	struct DynArr heap;
+	initDynArr(&heap, 5);
+// 2, 3, 5, 9, 10, 7, 8, 12, 14, 11, 16
+	heapAdd(&heap, 1);
+	heapAdd(&heap, 3);
     return 0;
     
 }
