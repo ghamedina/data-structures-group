@@ -30,7 +30,7 @@ void freeDynArr(struct DynArr *v)
     if(v->data != 0)
     {
         free(v->data);     /* free the space on the heap */
-        v->data = 0;       /* make it point to null */
+        //v->data = 0;       /* make it point to null */
     }
     v->size = 0;
     v->capacity = 0;
@@ -48,11 +48,12 @@ void _setCapacityDynArr(struct DynArr *v, int newCap)
 {
     assert(v != 0);
     /* Allocate new temporary dynamic array with given cap */
-    TYPE *temp = malloc(sizeof(TYPE) * newCap);
+    TYPE *temp = (TYPE*)malloc((sizeof(TYPE) )* (newCap));
     assert(temp != 0);
     /* Copy elements from old array to new array */
     for (int i = 0; i < v->size; i++) {
-    temp[i] = v->data[i];
+        assert(i < newCap);
+        temp[i] = v->data[i];
     }
     /* Free the old array */
     free(v->data);
@@ -117,7 +118,7 @@ void removeAtDynArr (struct DynArr * da, int index){
     assert(da->size>0);
     assert(index>=0&&index<=da->size);
     
-    for(int i = index; i<=da->size-1; i++){
+    for(int i = index; i<da->size-1; i++){
         
         swapDynArr(da, i, i+1);
     }
@@ -271,31 +272,33 @@ int main(int argc, const char * argv[]) {
 	heapAdd(&heap, 3);
 	heapAdd(&heap, 2);
 	heapAdd(&heap, 4);
-	heapAdd(&heap, 5);
+	heapAdd(&heap, 5);/*
 	heapAdd(&heap, 7);
 	heapAdd(&heap, 8);
 	heapAdd(&heap, 6);
 	heapAdd(&heap, 1);
 	heapAdd(&heap, 0);
+    heapAdd(&heap, 11);
+    heapAdd(&heap, 21);*/
     printf("Initial: \n\n");
     printArray(&heap);
 
 
     printf("1:\n\n");
 	heapRemoveFirst(&heap);
-    printArray(&heap);
+    //printArray(&heap);
 
     printf("2:\n\n");
     heapRemoveFirst(&heap);
-    printArray(&heap);
+    //printArray(&heap);
 
     printf("3:\n\n");
     heapRemoveFirst(&heap);
-    printArray(&heap);
+    //printArray(&heap);
 
-    printf("4:\n\n");
-    heapRemoveFirst(&heap);
-    printArray(&heap);
+    //printf("4:\n\n");
+    //heapRemoveFirst(&heap);
+    //printArray(&heap);
 
 	freeDynArr(&heap);
     return 0;
