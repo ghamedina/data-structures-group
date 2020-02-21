@@ -283,6 +283,17 @@ int main(int argc, const char * argv[]) {
 
 	printArray(&heap);
 
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    heapRemoveFirst(&heap);
+    printArray(&heap);
+
 	freeDynArr(&heap);
     return 0;
 }
