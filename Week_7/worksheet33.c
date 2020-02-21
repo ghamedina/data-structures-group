@@ -117,7 +117,7 @@ void removeAtDynArr (struct DynArr * da, int index){
     assert(da->size>0);
     assert(index>=0&&index<=da->size);
     
-    for(int i = index; i<=da->size-1; i++){
+    for(int i = index; i<da->size-1; i++){
         
         swapDynArr(da, i, i+1);
     }
@@ -274,25 +274,25 @@ int main(int argc, const char * argv[]) {
 	heapAdd(&heap, 10);
 	printArray(&heap);
 	heapAdd(&heap, 7);
-	heapAdd(&heap, 8);
-	heapAdd(&heap, 12);
-	heapAdd(&heap, 14);
-	heapAdd(&heap, 11);
-	heapAdd(&heap, 16);
-	heapRemoveFirst(&heap);
+	// heapAdd(&heap, 8);
+	// heapAdd(&heap, 12);
+	// heapAdd(&heap, 14);
+	// heapAdd(&heap, 11);
+	// heapAdd(&heap, 16);
+	// heapRemoveFirst(&heap);
 
-	printArray(&heap);
+	// printArray(&heap);
 
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    heapRemoveFirst(&heap);
-    printArray(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // heapRemoveFirst(&heap);
+    // printArray(&heap);
 
 	freeDynArr(&heap);
     return 0;
