@@ -204,8 +204,8 @@ TYPE heapGetFirst (struct DynArr *heap) {
 void adjustHeap(struct DynArr * heap, int max, int pos) {
 	int leftChild = 2 * pos + 1; 
 	int rightChild = 2 * pos + 2;
+	int smallestChild = indexSmallest(heap, leftChild, rightChild);
 	if (rightChild < max) { /* we have two children */
-        int smallestChild = indexSmallest(heap, leftChild, rightChild);
 		// if value at pos > value of smallest child
 		if (heap->data[pos] > heap->data[smallestChild]) {
 			// swap with smallest child,  call adjustHeap (max, index of smallest child)
@@ -218,7 +218,7 @@ void adjustHeap(struct DynArr * heap, int max, int pos) {
 		// if value at pos > value of child
 		if (heap->data[pos] > heap->data[leftChild]) {
 			// swap with smallest child, call adjustHeap (max, index of left child)
-			swap(heap, pos, leftChild);
+			swap(heap, pos, smallestChild);
 			adjustHeap(heap,dyArraySize(heap)-1, leftChild);
 		}
 	}
