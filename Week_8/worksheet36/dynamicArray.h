@@ -4,8 +4,8 @@
 
 #ifndef __TYPE
 #define __TYPE
-# define TYPE      char
-# define TYPE_SIZE sizeof(char)
+// # define TYPE      char
+// # define TYPE_SIZE sizeof(char)
 # endif
 
 # ifndef LT
@@ -15,41 +15,41 @@
 # ifndef EQ
 # define EQ(A, B) ((A) == (B))
 # endif
+# define TYPE struct association *
+typedef struct dynArray dynArray;
 
-typedef struct DynArr DynArr;
-
-// struct DynArr
-// {
-// 	TYPE *data;		/* pointer to the data array */
-// 	int size;		/* Number of elements in the array */
-// 	int capacity;	/* capacity ofthe array */
-// };
+struct dynArray
+{
+	TYPE *data;		/* pointer to the data array */
+	int size;		/* Number of elements in the array */
+	int capacity;	/* capacity ofthe array */
+};
 
 /* Dynamic Array Functions */
-void initDynArr(DynArr *v, int capacity);	
-DynArr *newDynArr(int cap);
+void initDynArr(dynArray *v, int capacity);	
+dynArray *newDynArr(int cap);
 
-void freeDynArr(DynArr *v);
-void deleteDynArr(DynArr *v);
+void freeDynArr(dynArray *v);
+void deleteDynArr(dynArray *v);
 
-int sizeDynArr(DynArr *v);
+int sizeDynArr(dynArray *v);
 
-void addDynArr(DynArr *v, TYPE val);
-TYPE getDynArr(DynArr *v, int pos); //returns value stored at position
-void putDynArr(DynArr *v, int pos, TYPE val);
-void swapDynArr(DynArr *v, int i, int  j);
-void removeAtDynArr(DynArr *v, int idx);
+void dyArrayAdd(dynArray *v, TYPE val);
+TYPE getDynArr(dynArray *v, int pos); //returns value stored at position
+void putDynArr(dynArray *v, int pos, TYPE val);
+void swapDynArr(dynArray *v, int i, int  j);
+void removeAtDynArr(dynArray *v, int idx);
 
-/* Stack interface. */
-int isEmptyDynArr(DynArr *v);
-void pushDynArr(DynArr *v, TYPE val);
-TYPE topDynArr(DynArr *v);
-void popDynArr(DynArr *v);
+// /* Stack interface. */
+int isEmptyDynArr(dynArray *v);
+// void pushDynArr(dynArray *v, TYPE val);
+// TYPE topDynArr(dynArray *v);
+// void popDynArr(dynArray *v);
 
-/* Bag Interface */	
-/* Note addDynArr is already declared above*/
-int containsDynArr(DynArr *v, TYPE val);
-void removeDynArr(DynArr *v, TYPE val);
+// /* Bag Interface */	
+// /* Note addDynArr is already declared above*/
+// int containsDynArr(dynArray *v, TYPE val);
+// void removeDynArr(dynArray *v, TYPE val);
 
-void printDynArr(DynArr *v);
+// void printDynArr(dynArray *v);
 #endif

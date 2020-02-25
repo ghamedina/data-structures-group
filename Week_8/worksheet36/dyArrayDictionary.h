@@ -23,7 +23,7 @@ struct association {
 # include "dynamicArray.h"
  
 /* dictionary */
-void dyArrayDictionaryGet (struct dynArray *da, KEYTYPE key, VALUETYPE *valptr)
+void dyArrayDictionaryGet (struct dynArray *da, KEYTYPE key, VALUETYPE *valptr);
 void dyArrayDictionaryPut (struct dynArray * da, KEYTYPE key, VALUETYPE val);
 int dyArrayDictionaryContainsKey (struct dynArray * da, KEYTYPE key);
 void dyArrayDictionaryRemoveKey (struct dynArray * da, KEYTYPE key);
