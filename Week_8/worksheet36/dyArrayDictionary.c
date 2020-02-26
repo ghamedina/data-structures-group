@@ -43,14 +43,30 @@ int dyArrayDictionaryContainsKey (struct dynArray *da, KEYTYPE key) {
 
 void dyArrayDictionaryRemoveKey (struct  dynArray *da, KEYTYPE key) {
     /* FIXME: You will write this function */
+    struct association* temp;
     for(int i = 0; i < da->size; i++) {
         //cast data to association type and then compare key
         if(((struct association*)(da->data[i]))->key == key) {
+            temp = da->data[i];
             removeAtDynArr(da, i);
+            free(temp);
+            temp = NULL;
             return;
         }
     }
 
+}
+
+
+//free?
+void freeDictionary(struct dynArray *da) {
+    struct association* temp;
+    while(da->size > 0) {
+        temp = da->data[0];
+        removeAtDynArr(da, 0);
+        free(temp);
+    }
+    temp = NULL;
 }
 
 
@@ -99,6 +115,8 @@ int main() {
     dyArrayDictionaryRemoveKey(dictionary,"Tanya");
     printf("Does it contain Tanya: %d\n", dyArrayDictionaryContainsKey(dictionary, "Tanya"));
     freeDynArr(dictionary);
+    freeDictionary(dictionary);
+    deleteDynArr(dictionary);
     return 0;
 }
 
