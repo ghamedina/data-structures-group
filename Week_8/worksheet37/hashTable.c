@@ -93,24 +93,42 @@ int openHashTableBagContains (struct openHashTable *ht, TYPE newValue) {
 
 void _resizeOpenHashTable (struct openHashTable *ht) {
     //write this
-    printf("\n\n------ RESIZE ------ \n\n");
-    struct openHashTable newHT;
-    initOpenHashTable(&newHT, ht->tablesize * 2);
-    int temp = ht->tablesize;
-    // newHT.tablesize = ht->tablesize * 2;
-    for(int i = 0; i < ht->tablesize; i++) {
-        if(ht->table[i] != 0)
-        {
-            printf("Inside of resize...    ");
-            openHashTableAdd(&newHT, *(ht->table[i]));
-        }
-    }
-    // int x = ht->tablesize;
-    //free ht somehow
-    free(ht->table);
-    ht = &newHT;
-    newHT.tablesize = temp * 2;
-    printf("\n--- END RESIZE -----\n\n");
+    // printf("\n\n------ RESIZE ------ \n\n");
+    // struct openHashTable newHT;
+    // initOpenHashTable(&newHT, ht->tablesize * 2);
+    // int temp = ht->tablesize;
+    // // newHT.tablesize = ht->tablesize * 2;
+    // for(int i = 0; i < ht->tablesize; i++) {
+    //     if(ht->table[i] != 0)
+    //     {
+    //         printf("Inside of resize...    ");
+    //         openHashTableAdd(&newHT, *(ht->table[i]));
+    //     }
+    // }
+    // // int x = ht->tablesize;
+    // //free ht somehow
+    // free(ht->table);
+    // ht = &newHT;
+    // newHT.tablesize = temp * 2;
+    // printf("\n--- END RESIZE -----\n\n");
+
+
+    //or just a new table??
+    // int newCap = ht->tablesize * 2;
+    // TYPE ** newTable = (TYPE**)malloc(newCap * sizeof(TYPE*));
+    // assert(newTable != 0);
+    // for(int i = 0; i < newCap; i++) {
+    //     newTable[i] = 0;
+    // }
+    // struct openHashTable* temp;
+    // TYPE*** tt = ht->table;
+    // ht->table = newTable;
+    // for(int x = 0; x < ht->tablesize; x++)
+    // {
+    //     if(tt[x] != 0) {
+    //         openHashTableAdd(ht, *tt[x]);
+    //     }
+    // }
 
 }
 
