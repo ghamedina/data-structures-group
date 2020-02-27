@@ -62,7 +62,13 @@ void openHashTableAdd (struct openHashTable * ht, TYPE newValue) {
     
     //dereference pointer at the index so we can assign to the newvalue pointer
     //because table[idx] is a double pointer
-    *(ht->table[idx]) = newValue;
+    
+    if(ht->table[idx]!=NULL) {
+        *(ht->table[idx]) = newValue;
+    } else {
+        ht->table[idx] = malloc(sizeof(TYPE *));
+        *(ht->table[idx]) = newValue;
+    }
 }
 
 
