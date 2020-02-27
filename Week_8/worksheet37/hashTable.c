@@ -4,7 +4,7 @@
 
 #ifndef __TYPE
 #define __TYPE 
-#define TYPE char
+#define TYPE char*
 #endif
 
 
@@ -18,7 +18,7 @@ void _resizeOpenHashTable (struct openHashTable *ht);
 int HASH(TYPE key)
 {
 
-    return key;
+    return key[0];
 }
 
 void initOpenHashTable (struct openHashTable* ht, int size) {
@@ -59,8 +59,10 @@ void openHashTableAdd (struct openHashTable * ht, TYPE newValue) {
     while(ht->table[idx] != 0) {
         idx = (idx +1) % ht->tablesize;
     }
-    TYPE* temp = newValue;
-    ht->table[idx] = temp;
+    
+    //dereference pointer at the index so we can assign to the newvalue pointer
+    //because table[idx] is a double pointer
+    *(ht->table[idx]) = newValue;
 }
 
 
@@ -69,11 +71,11 @@ int openHashTableBagContains (struct openHashTable *ht, TYPE newValue) {
     idx = HASH(newValue) % ht->tablesize;
     if (idx < 0) idx += ht->tablesize;
     //write this part
-    while(ht->table[idx] != newValue && ht->table[idx] != 0) {
+    while(*(ht->table[idx]) != newValue && ht->table[idx] != 0) {
         idx = (idx +1) % ht->tablesize; //move it to beginning if > tbsize
         //will break out when it either finds value or reaches next null
     }
-    if(ht->table[idx] == newValue) {
+    if(*(ht->table[idx]) == newValue) {
         return 1;
     }
     return 0;
@@ -84,7 +86,7 @@ void _resizeOpenHashTable (struct openHashTable *ht) {
     struct openHashTable newHT;
     initOpenHashTable(&newHT, ht->tablesize * 2);
     for(int i = 0; i < ht->tablesize; i++) {
-        openHashTableAdd(&newHT, ht->table[i]);
+        openHashTableAdd(&newHT, *(ht->table[i]));
     }
     //free ht somehow
     free(ht->table);
@@ -95,7 +97,7 @@ void _resizeOpenHashTable (struct openHashTable *ht) {
 
 void print(struct openHashTable *ht) {
     for(int i = 0; i < ht->tablesize; i++) {
-        printf("%c\n", ht->table[i]);
+        printf("%s\n", *(ht->table[i]));
     }
 }
 
