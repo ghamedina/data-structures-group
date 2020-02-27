@@ -42,10 +42,16 @@ void openHashTableAdd (struct openHashTable * ht, TYPE newValue) {
     int idx; 
 
     /* Make sure we have space and under the load factor threshold*/ 
+    printf("Count: %d, Size: %d, Load factor: %g\n", ht->count, ht->tablesize, ht->count / (double) ht->tablesize);
     if ((ht->count / (double) ht->tablesize) > 0.75) 
     {
+        printf("Inside openHashTable - resizing\n");
+        int temp = ht->tablesize;
         _resizeOpenHashTable(ht);
+        printf("New table size: %d\n", ht->tablesize);
+        // assert(ht->tablesize = temp * 2);
     }
+    
     ht->count++;
     
     idx = HASH(newValue) % ht->tablesize;
@@ -59,12 +65,14 @@ void openHashTableAdd (struct openHashTable * ht, TYPE newValue) {
     while(ht->table[idx] != 0) {
         idx = (idx +1) % ht->tablesize;
     }
-    printf("index: %d\n", idx);
     
     //dereference pointer at the index so we can assign to the newvalue pointer
     //because table[idx] is a double pointer
-    
-    ht->table[idx] = &newValue;
+    // printf("%s\n", *ht->table[idx]);
+    TYPE* temp = (TYPE*)malloc(sizeof(TYPE*));
+    *temp = newValue;
+    ht->table[idx] = temp; //
+    printf("Inside openHastableAdd %s added to index %d\n", *temp, idx);
 }
 
 
@@ -73,11 +81,11 @@ int openHashTableBagContains (struct openHashTable *ht, TYPE newValue) {
     idx = HASH(newValue) % ht->tablesize;
     if (idx < 0) idx += ht->tablesize;
     //write this part
-    while(*(ht->table[idx]) != newValue && ht->table[idx] != 0) {
+    while(ht->table[idx] != &newValue && ht->table[idx] != 0) {
         idx = (idx +1) % ht->tablesize; //move it to beginning if > tbsize
         //will break out when it either finds value or reaches next null
     }
-    if(*(ht->table[idx]) == newValue) {
+    if(ht->table[idx] == &newValue) {
         return 1;
     }
     return 0;
@@ -85,31 +93,48 @@ int openHashTableBagContains (struct openHashTable *ht, TYPE newValue) {
 
 void _resizeOpenHashTable (struct openHashTable *ht) {
     //write this
+    printf("\n\n------ RESIZE ------ \n\n");
     struct openHashTable newHT;
     initOpenHashTable(&newHT, ht->tablesize * 2);
+    int temp = ht->tablesize;
+    // newHT.tablesize = ht->tablesize * 2;
     for(int i = 0; i < ht->tablesize; i++) {
-        openHashTableAdd(&newHT, *(ht->table[i]));
+        if(ht->table[i] != 0)
+        {
+            printf("Inside of resize...    ");
+            openHashTableAdd(&newHT, *(ht->table[i]));
+        }
     }
+    // int x = ht->tablesize;
     //free ht somehow
     free(ht->table);
-    
     ht = &newHT;
-    // newHT = 0;
+    newHT.tablesize = temp * 2;
+    printf("\n--- END RESIZE -----\n\n");
+
 }
 
 void print(struct openHashTable *ht) {
     for(int i = 0; i < ht->tablesize; i++) {
-        if(*(ht->table[i])!= 0)
-        printf("%s\n", *ht->table[i]);
+        if(ht->table[i]!= 0)
+        printf("Index %d: %s\n", i, *ht->table[i]);
     }
 }
 
 int main() {
 
     struct openHashTable table;
-    initOpenHashTable(&table, 6);
-    printf("hashed index: %d\n", HASH("Alex") % table.tablesize);
+    initOpenHashTable(&table, 5);
+    printf("Hash table size: %d\n", table.tablesize);
+    openHashTableAdd(&table, "tanya");
+
+    openHashTableAdd(&table, "shirley");
+    openHashTableAdd(&table,"Melisa");
+    openHashTableAdd(&table,"Noor");
+    openHashTableAdd(&table,"Andrew");
     openHashTableAdd(&table,"Alex");
-    printf("Index at 5: %s\n", **(&table.table[5]));
+    // printf("Index at 5: %s\n", **(&table.table[5]));
+    print(&table);
+    // printf("Index at 4: %s\n", *table.table[4]);
     return 0;
 }
