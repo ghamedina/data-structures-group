@@ -59,10 +59,12 @@ void openHashTableAdd (struct openHashTable * ht, TYPE newValue) {
     while(ht->table[idx] != 0) {
         idx = (idx +1) % ht->tablesize;
     }
+    printf("index: %d\n", idx);
     
     //dereference pointer at the index so we can assign to the newvalue pointer
     //because table[idx] is a double pointer
-    *(ht->table[idx]) = newValue;
+    
+    ht->table[idx] = &newValue;
 }
 
 
@@ -97,11 +99,17 @@ void _resizeOpenHashTable (struct openHashTable *ht) {
 
 void print(struct openHashTable *ht) {
     for(int i = 0; i < ht->tablesize; i++) {
-        printf("%s\n", *(ht->table[i]));
+        if(*(ht->table[i])!= 0)
+        printf("%s\n", *ht->table[i]);
     }
 }
 
 int main() {
 
+    struct openHashTable table;
+    initOpenHashTable(&table, 6);
+    printf("hashed index: %d\n", HASH("Alex") % table.tablesize);
+    openHashTableAdd(&table,"Alex");
+    printf("Index at 5: %s\n", **(&table.table[5]));
     return 0;
 }
