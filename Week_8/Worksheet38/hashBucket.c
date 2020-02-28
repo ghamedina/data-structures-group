@@ -56,12 +56,33 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
     struct hlink * newLink = (struct hlink *) malloc(sizeof(struct hlink));
     assert(newLink);
     newLink->value = newValue;
-    newLink->next = ht->table[hashIndex];
-    ht->table[hashIndex] = newLink; /* add to bucket */
+    newLink->next = NULL;
     
+    if(ht->table[hashIndex]==NULL){
+        
+        ht->table[hashIndex] = malloc(sizeof(struct hlink));
+        ht->table[hashIndex] = newLink; /* add to bucket */
+
+    } else {
+        
+        struct hlink * iterator = ht->table[hashIndex];
+
+        while(iterator->next!=NULL) {
+
+            iterator=iterator->next;
+        }
+        
+        iterator->next = newLink;
+
+    }
+
     ht->count++;
     
-    if ((ht->count / (double) ht->tablesize) > 8.0) resizeTable(ht);
+    if ((ht->count / (double) ht->tablesize) > 8.0) {
+
+        resizeTable(ht);
+    }
+
 }
 
 
@@ -102,28 +123,67 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
 
 
     /* Fix me please*/
+    
+    assert(ht!=NULL && testElement!=NULL);
+    
+    //compute hash value to find the correct bucket
+    int hashIndex = HASH(testElement) % ht->tablesize;
+    if (hashIndex < 0) hashIndex += ht->tablesize;
+    
+    //bucket location
+    struct hlink * current = ht->table[hashIndex];
+    struct hlink * previous = current;
 
-
-
-
-
-
-
-
-
+    //search bucket
+    while(current!=NULL) {
+    
+        if(*(current->value) == *testElement) {
+            
+            previous->next = current->next;
+            free(current);
+            ht->count--;
+            
+        } else {
+            previous = current;
+            current = current->next;
+        }
+    }
 }
 
 void resizeTable (struct hashTable *ht) {
 
     /* Fix me please*/
+    struct hashTable newHT;
+    printf("Trying to create new table\n");
+    
+    initHashTable(&newHT, ht->tablesize*2);
+    
+    printf("After init in resize\n");
+    
+    for(int i = 0; i<ht->tablesize; i++){
+        
+        printf("Looking for bucket\n");
+        
+        struct hlink * iterator = ht->table[i];
+        
+        while(iterator!=NULL) {
+            
+            printf("During while loop\n");
+            
+            hashTableAdd(&newHT,iterator->value);
+            struct hlink * temp = iterator->next;
+            free(iterator);
+            iterator = temp;
 
-
-
-
-
-
-
-
+        }
+        
+    
+    }
+    
+    free(ht->table);
+    
+    ht->table = newHT.table;
+    ht->tablesize = newHT.tablesize;
 
 }
 
@@ -131,9 +191,11 @@ void resizeTable (struct hashTable *ht) {
 void print(struct hashTable *ht) {
     
     printf("==PRINTING HASH TABLE==\n");
+    
+    
     for(int i = 0; i < ht->tablesize; i++) {
         
-        printf("key %i: ",i);
+        printf("\nkey %i: ",i);
         
         if(ht->table[i]!=0) {
             
@@ -141,11 +203,9 @@ void print(struct hashTable *ht) {
             
             while(iterator!=NULL) {
                 
-                printf("%c ", *(ht->table[i]->value));
+                printf("%c ", *(iterator->value));
                 iterator=iterator->next;
             }
-            
-            printf("\n");
         }
     }
     printf("\n\n");
@@ -166,24 +226,24 @@ int main(){
     char string11[] = "Squirtle";
     
     struct hashTable bucket;
-//    initHashTable(&bucket, 5);
-//
-//    hashTableAdd(&bucket, string1);
-//    hashTableAdd(&bucket, string2);
-//    hashTableAdd(&bucket, string3);
-//    hashTableAdd(&bucket, string4);
-//    hashTableAdd(&bucket, string5);
-//
-//    print(&bucket);
-//
-//    hashTableAdd(&bucket, string6);
-//    hashTableAdd(&bucket, string7);
-//    hashTableAdd(&bucket, string8);
-//    hashTableAdd(&bucket, string9);
-//    hashTableAdd(&bucket, string10);
-//    hashTableAdd(&bucket, string11);
-//
-//    print(&bucket);
+    initHashTable(&bucket, 5);
+
+    hashTableAdd(&bucket, string1);
+    hashTableAdd(&bucket, string2);
+    hashTableAdd(&bucket, string3);
+    hashTableAdd(&bucket, string4);
+    hashTableAdd(&bucket, string5);
+
+    print(&bucket);
+
+    hashTableAdd(&bucket, string6);
+    hashTableAdd(&bucket, string7);
+    hashTableAdd(&bucket, string8);
+    hashTableAdd(&bucket, string9);
+    hashTableAdd(&bucket, string10);
+    hashTableAdd(&bucket, string11);
+
+    print(&bucket);
     
     return 0;
 }
