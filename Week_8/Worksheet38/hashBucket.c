@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifndef __TYPE
 #define __TYPE
@@ -8,7 +9,7 @@
 #endif
 
 struct hlink {
-    TYPE value;
+    TYPE * value;
     struct hlink *next;
 };
 
@@ -55,7 +56,7 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
     
     struct hlink * newLink = (struct hlink *) malloc(sizeof(struct hlink));
     assert(newLink);
-    newLink->value = newValue;
+    newLink->value = (TYPE*)newValue;
     newLink->next = NULL;
     
     if(ht->table[hashIndex]==NULL){
@@ -78,7 +79,7 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
 
     ht->count++;
     
-    if ((ht->count / (double) ht->tablesize) > 2.0) {
+    if ((ht->count / (double) ht->tablesize) > 1.0) {
 
         resizeTable(ht);
     }
@@ -105,7 +106,7 @@ int hashTableContains (struct hashTable * ht, TYPE testElement) {
     //search bucket
     while(iterator!=NULL) {
         
-        if(*(iterator->value) == *testElement) return 1;
+        if(strcmp((TYPE)iterator->value,testElement)) return 1;
         
         iterator = iterator->next;
     }
@@ -133,38 +134,39 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
     struct hlink * current = ht->table[hashIndex];
     struct hlink * previous = current;
 
-    //search bucket
-    while(current!=NULL) {
- 
-        //Test element is the only element in a bucket
-        if(*(current->value) == *testElement && current->next==NULL) {
-           
-            free(current);
-            ht->table[hashIndex] = NULL;
-            ht->count--;
-            return;
-            
-            //Test element is the first element in a bucket of more than 1
-        } else if(*(current->value) == *testElement && current->next!=NULL) {
-            
-            ht->table[hashIndex] = current->next;
-            free(current);
-            ht->count--;
-            return;
-            
-            //Test element is not the first and only element in bucket
-        } else if(*(current->value) == *testElement){
-            
-            previous->next = current->next;
-            free(current);
-            ht->count--;
-            return;
-            
-        }
+    //First and only item in bucket
+    if(strcmp((TYPE)current->value,testElement) && current->next == NULL) {
         
-        current = current->next;
-    }
+        free(current);
+        ht->table[hashIndex] = NULL;
+        ht->count--;
+        return;
+       
+        //First but not only item in bucket
+    } else if(strcmp((TYPE)current->value,testElement) && current->next != NULL){
+        
+        ht->table[hashIndex] = current->next;
+        free(current);
+        ht->count--;
+        return;
+        
+        //All other scenarios
+    } else {
+        
+        while(current!=NULL) {
 
+            if(strcmp((TYPE)current->value,testElement)) {
+            
+                previous->next = current->next;
+                free(current);
+                ht->count--;
+                printf("Actually removed %s\n",testElement);
+                return;
+            }
+            
+            current = current->next;
+        }
+    }
 }
 
 void resizeTable (struct hashTable *ht) {
@@ -180,7 +182,7 @@ void resizeTable (struct hashTable *ht) {
         
         while(iterator!=NULL) {
 
-            hashTableAdd(&newHT,iterator->value);
+            hashTableAdd(&newHT,(TYPE)iterator->value);
             struct hlink * temp = iterator->next;
             free(iterator);
             iterator = temp;
@@ -197,6 +199,8 @@ void resizeTable (struct hashTable *ht) {
 
 void freeHashTable(struct hashTable * ht){
     
+    int freedcounter = 0;
+    
     //freeing individual pointers
     for(int i = 0; i<ht->tablesize; i++) {
         
@@ -207,10 +211,14 @@ void freeHashTable(struct hashTable * ht){
             struct hlink * temp = current->next;
             free(current);
             current = temp;
+            freedcounter++;
         }
     }
+    
+    printf("At the end, there are %i items so freed %i things!!\n",ht->count,freedcounter);
     //freeing table
     free(ht->table);
+    
 }
 
 
@@ -229,7 +237,7 @@ void print(struct hashTable *ht) {
             
             while(iterator!=NULL) {
                 
-                printf("%c ", *(iterator->value));
+                printf("%s ", (TYPE)iterator->value);
                 iterator=iterator->next;
             }
         }
