@@ -56,25 +56,32 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
     struct hlink * newLink = (struct hlink *) malloc(sizeof(struct hlink));
     assert(newLink);
     newLink->value = newValue;
-    newLink->next = ht->table[hashIndex];
+    newLink->next = NULL;
     
     if(ht->table[hashIndex]==NULL){
+        
         ht->table[hashIndex] = malloc(sizeof(struct hlink));
         ht->table[hashIndex] = newLink; /* add to bucket */
+
     } else {
         
         struct hlink * iterator = ht->table[hashIndex];
-        
+
         while(iterator->next!=NULL) {
+
             iterator=iterator->next;
         }
         
         iterator->next = newLink;
+
     }
-    
+
     ht->count++;
     
-    if ((ht->count / (double) ht->tablesize) > 8.0) resizeTable(ht);
+    if ((ht->count / (double) ht->tablesize) > 8.0) {
+
+        resizeTable(ht);
+    }
 
 }
 
@@ -147,13 +154,21 @@ void resizeTable (struct hashTable *ht) {
 
     /* Fix me please*/
     struct hashTable newHT;
+    printf("Trying to create new table\n");
+    
     initHashTable(&newHT, ht->tablesize*2);
     
+    printf("After init in resize\n");
+    
     for(int i = 0; i<ht->tablesize; i++){
+        
+        printf("Looking for bucket\n");
         
         struct hlink * iterator = ht->table[i];
         
         while(iterator!=NULL) {
+            
+            printf("During while loop\n");
             
             hashTableAdd(&newHT,iterator->value);
             struct hlink * temp = iterator->next;
@@ -161,6 +176,8 @@ void resizeTable (struct hashTable *ht) {
             iterator = temp;
 
         }
+        
+    
     }
     
     free(ht->table);
@@ -186,7 +203,7 @@ void print(struct hashTable *ht) {
             
             while(iterator!=NULL) {
                 
-                printf("%c ", *(ht->table[i]->value));
+                printf("%c ", *(iterator->value));
                 iterator=iterator->next;
             }
         }
