@@ -271,12 +271,24 @@ int main(){
 
     print(&bucket);
     
+    if(hashTableContains(&bucket, string7)){
+        printf("Found %s\n", string7);
+    } else {
+        printf("Can't find %s\n", string7);
+    }
+    
     hashTableRemove(&bucket, string7);
     hashTableRemove(&bucket, string8);
     
     print(&bucket);
     printf("Removed %s\n",string7);
     printf("Removed %s\n",string8);
+    
+    if(hashTableContains(&bucket, string7)){
+        printf("Found %s\n", string7);
+    } else {
+        printf("Can't find %s\n", string7);
+    }
     
     freeHashTable(&bucket);
     
