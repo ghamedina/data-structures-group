@@ -154,28 +154,25 @@ void resizeTable (struct hashTable *ht) {
 
     /* Fix me please*/
     struct hashTable newHT;
-    printf("Trying to create new table\n");
-    
+ 
     initHashTable(&newHT, ht->tablesize*2);
-    
-    printf("After init in resize\n");
-    
+
     for(int i = 0; i<ht->tablesize; i++){
-        
-        printf("Looking for bucket\n");
-        
+
         struct hlink * iterator = ht->table[i];
         
         while(iterator!=NULL) {
-            
-            printf("During while loop\n");
-            
+
             hashTableAdd(&newHT,iterator->value);
             struct hlink * temp = iterator->next;
             free(iterator);
             iterator = temp;
 
         }
+        
+//        if(ht->table[i]!=NULL) {
+//            free(ht->table[i]);
+//        }
         
     
     }
@@ -185,6 +182,31 @@ void resizeTable (struct hashTable *ht) {
     ht->table = newHT.table;
     ht->tablesize = newHT.tablesize;
 
+}
+
+
+void freeHashTable(struct hashTable * ht){
+    
+    //freeing individual pointers
+    for(int i = 0; i<ht->tablesize; i++) {
+     
+        if(ht->table[i]!=NULL){ //check to see if it was allocated before freeing
+            
+            struct hlink * current = ht->table[i];
+
+            while(current!=NULL){
+                
+                struct hlink * temp = current->next;
+                free(current);
+                current = temp;
+                
+                printf("Freed\n");
+            }
+        }
+    }
+    
+    //freeing table
+    free(ht->table);
 }
 
 
@@ -244,6 +266,8 @@ int main(){
     hashTableAdd(&bucket, string11);
 
     print(&bucket);
+    
+    freeHashTable(&bucket);
     
     return 0;
 }
