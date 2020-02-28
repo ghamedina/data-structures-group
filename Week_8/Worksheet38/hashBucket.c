@@ -145,7 +145,7 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
             return;
             
             //Test element is the first element in a bucket of more than 1
-        } else if(*(current->value) == *testElement && current == previous) {
+        } else if(*(current->value) == *testElement && current->next!=NULL) {
             
             ht->table[hashIndex] = current->next;
             free(current);
@@ -250,6 +250,7 @@ int main(){
     char string9[] = "Geodude";
     char string10[] = "Starmie";
     char string11[] = "Squirtle";
+    char string12[] = "Burmy";
     
     struct hashTable bucket;
     initHashTable(&bucket, 5);
@@ -268,6 +269,7 @@ int main(){
     hashTableAdd(&bucket, string9);
     hashTableAdd(&bucket, string10);
     hashTableAdd(&bucket, string11);
+    hashTableAdd(&bucket, string12);
 
     print(&bucket);
     
