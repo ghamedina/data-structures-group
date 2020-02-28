@@ -54,7 +54,7 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
     if (hashIndex < 0) hashIndex += ht->tablesize;
     
     struct hlink * newLink = (struct hlink *) malloc(sizeof(struct hlink));
-    assert(newLink);
+    assert(newLink != NULL);
     newLink->value = newValue;
     newLink->next = NULL;
     
@@ -251,23 +251,23 @@ int main(){
     initHashTable(&bucket, 5);
 
     hashTableAdd(&bucket, string1);
-    hashTableAdd(&bucket, string2);
-    hashTableAdd(&bucket, string3);
-    hashTableAdd(&bucket, string4);
-    hashTableAdd(&bucket, string5);
+    // hashTableAdd(&bucket, string2);
+    // hashTableAdd(&bucket, string3);
+    // hashTableAdd(&bucket, string4);
+    // hashTableAdd(&bucket, string5);
 
-    print(&bucket);
+    // print(&bucket);
 
-    hashTableAdd(&bucket, string6);
-    hashTableAdd(&bucket, string7);
-    hashTableAdd(&bucket, string8);
-    hashTableAdd(&bucket, string9);
-    hashTableAdd(&bucket, string10);
-    hashTableAdd(&bucket, string11);
+    // hashTableAdd(&bucket, string6);
+    // hashTableAdd(&bucket, string7);
+    // hashTableAdd(&bucket, string8);
+    // hashTableAdd(&bucket, string9);
+    // hashTableAdd(&bucket, string10);
+    // hashTableAdd(&bucket, string11);
 
     print(&bucket);
     
     freeHashTable(&bucket);
-    
+    // free(bucket);
     return 0;
 }
