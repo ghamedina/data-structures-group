@@ -20,11 +20,11 @@ struct hashTable {
 
 int HASH(TYPE key)
 {
-
     return key[0];
 }
 
 void resizeTable (struct hashTable *ht);
+void print(struct hashTable *ht);
 
 void initHashTable (struct hashTable * ht, int size) {
 
@@ -52,21 +52,28 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
     //compute hash value to find the correct bucket
     int hashIndex = HASH(newValue) % ht->tablesize;
     if (hashIndex < 0) hashIndex += ht->tablesize;
-    
-    struct hlink * newLink = (struct hlink *) malloc(sizeof(struct hlink));
+
+    //Creating a new link
+    struct hlink * newLink = malloc(sizeof(struct hlink));
     assert(newLink);
     newLink->value = newValue;
     newLink->next = NULL;
     
-    if(ht->table[hashIndex]==NULL){
+    //Finding the bucket
+    struct hlink * iterator = ht->table[hashIndex];
+    
+    //First link in a bucket
+    if(iterator == NULL){
         
-        ht->table[hashIndex] = malloc(sizeof(struct hlink));
-        ht->table[hashIndex] = newLink; /* add to bucket */
-
+        //allocating space for first link in bucket?
+//        ht->table[hashIndex] = malloc(sizeof(struct hlink));
+        
+        //placing the new link in the bucket
+        ht->table[hashIndex] = newLink;
+        
     } else {
-        
-        struct hlink * iterator = ht->table[hashIndex];
 
+        //searching the rest of the buckets for an empty space
         while(iterator->next!=NULL) {
 
             iterator=iterator->next;
@@ -78,7 +85,7 @@ void hashTableAdd (struct hashTable *ht, TYPE newValue) {
 
     ht->count++;
     
-    if ((ht->count / (double) ht->tablesize) > 8.0) {
+    if ((ht->count / (double) ht->tablesize) > 2.0) {
 
         resizeTable(ht);
     }
@@ -120,8 +127,6 @@ int hashTableContains (struct hashTable * ht, TYPE testElement) {
 
 
 void hashTableRemove (struct hashTable * ht, TYPE testElement) {
-
-
     /* Fix me please*/
     
     assert(ht!=NULL && testElement!=NULL);
@@ -132,21 +137,30 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
     
     //bucket location
     struct hlink * current = ht->table[hashIndex];
-    struct hlink * previous = current;
+    struct hlink * previous;
 
     //search bucket
     while(current!=NULL) {
+        
+        previous = current;
     
-        if(*(current->value) == *testElement) {
+        if(*(current->value) == *testElement && current->next == NULL) {
+            
+            current = current->next;
+            free(current);
+            free(ht->table[hashIndex]);
+            ht->count--;
+            break;
+            
+        } else if(*(current->value) == *testElement){
             
             previous->next = current->next;
             free(current);
             ht->count--;
-            
-        } else {
-            previous = current;
-            current = current->next;
+            break;
         }
+
+        current = current->next;
     }
 }
 
@@ -154,29 +168,24 @@ void resizeTable (struct hashTable *ht) {
 
     /* Fix me please*/
     struct hashTable newHT;
- 
     initHashTable(&newHT, ht->tablesize*2);
-
+    
+    printf("===Resizing from %i to %i\n",ht->tablesize, newHT.tablesize);
+    
     for(int i = 0; i<ht->tablesize; i++){
 
         struct hlink * iterator = ht->table[i];
         
         while(iterator!=NULL) {
 
-            hashTableAdd(&newHT,iterator->value);
             struct hlink * temp = iterator->next;
+            hashTableAdd(&newHT,iterator->value);
+            printf("Freeing buckets inside of resize\n");
             free(iterator);
             iterator = temp;
-
         }
-        
-//        if(ht->table[i]!=NULL) {
-//            free(ht->table[i]);
-//        }
-        
-    
     }
-    
+
     free(ht->table);
     
     ht->table = newHT.table;
@@ -192,19 +201,26 @@ void freeHashTable(struct hashTable * ht){
      
         if(ht->table[i]!=NULL){ //check to see if it was allocated before freeing
             
-            struct hlink * current = ht->table[i];
+            struct hlink * iterator = ht->table[i];
+            printf("\nBucket number %i: ",i);
 
-            while(current!=NULL){
+            while(iterator!=NULL){
                 
-                struct hlink * temp = current->next;
-                free(current);
-                current = temp;
+                printf("%c ",*iterator->value);
                 
-                printf("Freed\n");
+                struct hlink * temp = iterator->next;
+                free(iterator);
+                iterator = temp;
+                
+                printf("Freed ");
             }
+            
+//            free(ht->table[i]);
+
         }
+        
     }
-    
+    printf("\n");
     //freeing table
     free(ht->table);
 }
@@ -219,7 +235,7 @@ void print(struct hashTable *ht) {
         
         printf("\nkey %i: ",i);
         
-        if(ht->table[i]!=0) {
+        if(ht->table[i]!=NULL) {
             
             struct hlink * iterator = ht->table[i];
             
@@ -248,7 +264,7 @@ int main(){
     char string11[] = "Squirtle";
     
     struct hashTable bucket;
-    initHashTable(&bucket, 5);
+    initHashTable(&bucket, 2);
 
     hashTableAdd(&bucket, string1);
     hashTableAdd(&bucket, string2);
@@ -265,6 +281,10 @@ int main(){
     hashTableAdd(&bucket, string10);
     hashTableAdd(&bucket, string11);
 
+    print(&bucket);
+    
+//    hashTableRemove(&bucket, string1);
+    
     print(&bucket);
     
     freeHashTable(&bucket);
