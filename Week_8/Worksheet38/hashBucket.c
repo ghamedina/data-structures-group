@@ -132,39 +132,41 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
     //bucket location
     struct hlink * current = ht->table[hashIndex];
     struct hlink * previous = current;
-
-    //search bucket
-    while(current!=NULL) {
- 
-        //Test element is the only element in a bucket
-        if(*(current->value) == *testElement && current->next==NULL) {
-           
-            free(current);
-            ht->table[hashIndex] = NULL;
-            ht->count--;
-            return;
-            
-            //Test element is the first element in a bucket of more than 1
-        } else if(*(current->value) == *testElement && current->next!=NULL) {
-            
-            ht->table[hashIndex] = current->next;
-            free(current);
-            ht->count--;
-            return;
-            
-            //Test element is not the first and only element in bucket
-        } else if(*(current->value) == *testElement){
-            
-            previous->next = current->next;
-            free(current);
-            ht->count--;
-            return;
-            
-        }
+    
+        //First and only item in bucket
+    if(*(current->value) == *testElement && current->next == NULL) {
         
-        current = current->next;
-    }
+        free(current);
+        ht->table[hashIndex] = NULL;
+        ht->count--;
+        return;
+       
+        //First but not only item in bucket
+    } else if(*(current->value) == *testElement && current->next != NULL){
+        
+        ht->table[hashIndex] = current->next;
+        free(current);
+        ht->count--;
+        return;
+        
+        //All other scenarios
+    } else {
+        
+        while(current!=NULL) {
 
+            if(*(current->value) == *testElement) {
+            
+                previous->next = current->next;
+                free(current);
+                ht->count--;
+                printf("Actually removed %s\n",testElement);
+                return;
+            }
+            
+            current = current->next;
+        }
+    }
+ 
 }
 
 void resizeTable (struct hashTable *ht) {
