@@ -134,29 +134,21 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
     struct hlink * current = ht->table[hashIndex];
     struct hlink * previous = current;
 
-    //First and only item in bucket
-    if(strcmp((TYPE)current->value,testElement) && current->next == NULL) {
-        
-        free(current);
-        ht->table[hashIndex] = NULL;
-        ht->count--;
-        return;
-       
-        //First but not only item in bucket
-    } else if(strcmp((TYPE)current->value,testElement) && current->next != NULL){
-        
+    //for the first link only
+    if(strcmp((TYPE)current->value,testElement)==0) {
+    
         ht->table[hashIndex] = current->next;
         free(current);
         ht->count--;
         return;
-        
-        //All other scenarios
+    
+        //all others
     } else {
         
         while(current!=NULL) {
-
-            if(strcmp((TYPE)current->value,testElement)) {
             
+            if(strcmp((TYPE)current->value,testElement)==0) {
+                
                 previous->next = current->next;
                 free(current);
                 ht->count--;
@@ -168,6 +160,42 @@ void hashTableRemove (struct hashTable * ht, TYPE testElement) {
         }
     }
 }
+    
+    
+//    //First and only item in bucket
+//    if(strcmp((TYPE)current->value,testElement)==0 && current->next == NULL) {
+//
+//        free(current);
+//        ht->table[hashIndex] = NULL;
+//        ht->count--;
+//        return;
+//
+//        //First but not only item in bucket
+//    } else if(strcmp((TYPE)current->value,testElement)==0 && current->next != NULL){
+//
+//        ht->table[hashIndex] = current->next;
+//        free(current);
+//        ht->count--;
+//        return;
+//
+//        //All other scenarios
+//    } else {
+//
+//        while(current!=NULL) {
+//
+//            if(strcmp((TYPE)current->value,testElement)) {
+//
+//                previous->next = current->next;
+//                free(current);
+//                ht->count--;
+//                printf("Actually removed %s\n",testElement);
+//                return;
+//            }
+//
+//            current = current->next;
+//        }
+//    }
+//}
 
 void resizeTable (struct hashTable *ht) {
 
