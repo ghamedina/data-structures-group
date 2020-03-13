@@ -18,7 +18,7 @@ void BSTIteratorInit (struct BinarySearchTree *tree, struct BSTIterator *itr){
     itr->tree = tree;
     
     //create an empty stack
-    struct DynArr * newDynArr = malloc(sizeof(struct DynArr));
+    struct DynArr * newDynArr = (struct DynArr*)malloc(sizeof(struct DynArr));
     initDynArr(newDynArr, 10);
     itr->stk = newDynArr;
 
