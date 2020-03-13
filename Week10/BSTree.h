@@ -33,7 +33,7 @@ void addBST(struct BinarySearchTree *tree, TYPE val);
 int containsBST(struct BinarySearchTree *tree, TYPE val);
 void removeBST(struct BinarySearchTree *tree, TYPE val);
 int sizeBST(struct BinarySearchTree *tree);
-
+void freeTree(struct Node* current);
 void print2D(struct Node *root);
 
 #endif

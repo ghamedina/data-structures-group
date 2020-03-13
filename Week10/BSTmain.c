@@ -31,12 +31,9 @@ int main(int argc, const char * argv[]) {
         printf("The top of the stack %i\n",BSTIteratorNext(&iter));
     }
 
-
-
-
-
-
-
+    freeDynArr(iter.stk);
+    freeTree(iter.tree->root);
+    free(iter.stk);
 
     return 0;
 }
