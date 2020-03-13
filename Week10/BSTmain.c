@@ -3,7 +3,7 @@
 #include "BSTIterator.h"
 
 
-/*
+
 int main(int argc, const char * argv[]) {
  
     struct BinarySearchTree tree;
@@ -40,4 +40,3 @@ int main(int argc, const char * argv[]) {
 
     return 0;
 }
-*/
