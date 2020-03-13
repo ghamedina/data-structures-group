@@ -82,7 +82,7 @@ struct Node* _nodeAddBST(struct Node *current, TYPE val)
     //if current is null, return new node with value
     if(current == NULL)
     {
-        newNode = malloc(sizeof(struct Node));
+        newNode = (struct Node*)malloc(sizeof(struct Node));
         assert(newNode != 0);
         newNode->value = val;
         newNode->left = newNode->right = 0;

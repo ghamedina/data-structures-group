@@ -21,7 +21,7 @@ struct AVLTree { /* Height-Balanced Binary Search Tree. */
 };
 
 struct AVLTree* newAVLTree() {
-    struct AVLTree* tree = malloc(sizeof(struct AVLTree));
+    struct AVLTree* tree = (struct AVLTree*)malloc(sizeof(struct AVLTree));
     assert(tree != 0);
     tree->root = 0;
     tree->cnt = 0;
@@ -88,7 +88,7 @@ struct Node* _balance(struct Node* current) {
 struct Node* _AVLnodeAdd(struct Node* current, TYPE newValue) {
     struct Node* newnode;
     if (current == 0) {
-        newnode = malloc(sizeof(struct Node));
+        newnode = (struct Node*)malloc(sizeof(struct Node));
         assert(newnode != 0);
         newnode->value = newValue;
         newnode->left = newnode->right = 0;
@@ -208,7 +208,7 @@ void AVLIteratorInit (struct AVLTree *tree, struct AVLIterator *itr){
     itr->tree = tree;
     
     //create an empty stack
-    struct DynArr * newDynArr = malloc(sizeof(struct DynArr));
+    struct DynArr * newDynArr = (struct DynArr*)malloc(sizeof(struct DynArr));
     initDynArr(newDynArr, 10);
     itr->stk = newDynArr;
 

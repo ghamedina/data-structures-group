@@ -2,7 +2,7 @@
 
 void initDynArr(struct DynArr *v, int capacity)
 {
-    v->data = malloc(sizeof(struct Node) * capacity);
+    v->data = (struct Node*)malloc(sizeof(struct Node) * capacity);
     assert(v->data != 0);
     
     v->size = 0;
